@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Combined interface (chat + noVNC)
+      - "8000:8000" # FastAPI backend API
+      - "6080:6080" # noVNC web viewer
+      - "5900:5900" # Direct VNC connection
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - API_PROVIDER=${API_PROVIDER:-anthropic}
+      - WIDTH=${WIDTH:-1024}
+      - HEIGHT=${HEIGHT:-768}
+      - DATABASE_PATH=/data/sessions.db
+      - USE_MOCK_AGENT=${USE_MOCK_AGENT:-false}
+    volumes:
+      - agent-data:/data # Persist SQLite database
+      - ~/.anthropic:/home/computeruse/.anthropic # Persist API key & settings
+    restart: unless-stopped
+
+volumes:
+  agent-data:
+    driver: local

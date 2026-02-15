@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Computer Use Agent</title>
+    <meta name="description"
+        content="Scalable backend for managing Claude computer use agent sessions with real-time streaming">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- ─── Sidebar ─── -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">⚡</div>
+                <h1>Agent Sessions</h1>
+            </div>
+
+            <div class="sidebar-actions">
+                <button class="btn btn-primary" id="btn-new-session" onclick="createSession()">
+                    ＋ New Session
+                </button>
+            </div>
+
+            <div class="session-list" id="session-list">
+                <!-- Sessions rendered dynamically -->
+            </div>
+
+            <div class="sidebar-settings">
+                <div class="form-group">
+                    <label>API Key</label>
+                    <input type="password" class="form-control" id="api-key-input" placeholder="sk-ant-..." value=""
+                        onchange="saveApiKey(this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Model</label>
+                    <select class="form-control" id="model-select">
+                        <option value="claude-sonnet-4-5-20250929">Claude Sonnet 4.5</option>
+                        <option value="claude-opus-4-20250514">Claude Opus 4</option>
+                        <option value="claude-opus-4-5-20251101">Claude Opus 4.5</option>
+                        <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5</option>
+                        <option value="claude-sonnet-4-20250514">Claude Sonnet 4</option>
+                    </select>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ─── Main Content ─── -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header" id="main-header">
+                <span class="session-title" id="session-title">Select or create a session</span>
+                <div class="header-actions">
+                    <span class="status-badge created" id="status-badge">Ready</span>
+                    <button class="btn btn-sm btn-danger" id="btn-stop" onclick="stopSession()" style="display:none">
+                        ■ Stop
+                    </button>
+                </div>
+            </header>
+
+            <!-- Body: Desktop (Middle) + Chat (Right) -->
+            <div class="main-body">
+                <!-- Desktop Panel (Middle) -->
+                <div class="desktop-panel">
+                    <div class="panel-header">
+                        <span>🖥 Virtual Desktop</span>
+                        <span id="vnc-status">Connecting…</span>
+                    </div>
+                    <iframe id="vnc-frame" src="http://localhost:6080/vnc.html?view_only=1&autoconnect=1&resize=scale"
+                        allow="fullscreen"></iframe>
+                </div>
+
+                <!-- Chat Panel (Right) -->
+                <div class="chat-panel" id="chat-panel">
+                    <div class="chat-header-info">
+                        <span>💬 Chat Session</span>
+                    </div>
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="empty-state" id="empty-state">
+                            <div class="empty-icon">🖥️</div>
+                            <h2>Claude Computer Use</h2>
+                            <p>Create a new session and send a message to start the agent.</p>
+                        </div>
+                    </div>
+
+                    <!-- File Management Panel (Bottom of Chat) -->
+                    <div class="files-panel">
+                        <div class="files-header">📁 File Management</div>
+                        <div class="files-empty">No files generated yet.</div>
+                    </div>
+
+                    <div class="chat-input-bar">
+                        <textarea id="chat-input" placeholder="Type a message…" rows="1"
+                            onkeydown="handleInputKeydown(event)"></textarea>
+                        <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled>▶</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
